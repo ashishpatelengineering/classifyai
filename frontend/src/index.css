@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Light, cool slate — Stripe/Mixpanel register. Dense data-tool UI. */
+  --canvas: #F6F8FA;        /* app background: very light cool gray */
+  --surface: #FFFFFF;       /* panels */
+  --surface-2: #F3F5F8;     /* subtle raised fills, inputs */
+  --surface-3: #EAEEF3;     /* hover / active fills */
+  --line: #E3E8EE;          /* hairline borders */
+  --line-strong: #D4DAE2;   /* emphasized borders */
+
+  --ink: #1A2027;           /* primary text */
+  --ink-2: #5B6673;         /* secondary text */
+  --ink-3: #8792A2;         /* muted / captions */
+
+  /* Accent — calm indigo-blue (Stripe-adjacent, not a clone) */
+  --accent: #4E5CD6;
+  --accent-hover: #4453C4;
+  --accent-press: #3B49AC;
+  --accent-soft: #EEF0FC;   /* tinted surface behind accent content */
+  --accent-line: #D4D9F5;
+  --on-accent: #FFFFFF;
+
+  /* Status — desaturated, professional; each means something */
+  --ok: #1F9D55;
+  --ok-soft: #E6F5EC;
+  --warn: #B7791F;
+  --warn-soft: #FBF3E3;
+  --danger: #C5342A;
+  --danger-soft: #FBEBEA;
+  --danger-line: #F3C9C5;
+  --info-soft: #EEF2F8;
+  --info-line: #D5E0EE;
+
+  --shadow-sm: 0 1px 2px rgba(16,24,40,0.04), 0 1px 3px rgba(16,24,40,0.06);
+  --shadow: 0 1px 2px rgba(16,24,40,0.04), 0 4px 12px rgba(16,24,40,0.06);
+
+  /* Legacy aliases → mapped so older rules still resolve during transition */
+  --bg: var(--canvas);
+  --paper: var(--canvas);
+  --paper-raised: var(--surface);
+  --text: var(--ink);
+  --text-dim: var(--ink-2);
+  --text-faint: var(--ink-3);
+  --pine: var(--accent);
+  --pine-dark: var(--accent-press);
+  --amber: var(--warn);
+  --sage: var(--ink-2);
+  --sage-line: var(--line);
+  --steel: var(--accent);
+  --steel-soft: var(--accent-soft);
+
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --radius: 8px;
+  --radius-sm: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0;
+  color: var(--ink);
+  letter-spacing: -0.018em;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font-family: var(--font-body);
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--pine);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+#root {
+  min-height: 100vh;
+}
