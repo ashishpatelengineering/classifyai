@@ -66,7 +66,9 @@ the frontend needs the backend's public URL at build time.
 
 A `render.yaml` Blueprint is included in `backend/`. It sets the root directory
 to `backend`, pins Python 3.11.9, and declares `GEMINI_API_KEY` as a required
-secret.
+secret. **Important:** `render.yaml` is only read by the **Blueprint** flow
+(Option A). A service created manually via **New → Web Service** (Option B)
+ignores it, so you must set those values by hand.
 
 **Option A — Blueprint (recommended):**
 1. Push the project to a GitHub or GitLab repository.
@@ -80,12 +82,16 @@ secret.
 **Option B — Manual Web Service:**
 1. Push the project to a repository.
 2. **New → Web Service**, connect the repository.
-3. Set **Root Directory** to `backend`.
-4. **Build Command:** `pip install -r requirements.txt`
+3. **Language:** select **Python 3** (the backend is a FastAPI/uvicorn app;
+   do not pick Node — that's the frontend, which deploys separately).
+4. Set **Root Directory** to `backend`.
+5. **Build Command:** `pip install -r requirements.txt`
    **Start Command:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
-5. **Instance type:** Free.
-6. Under **Environment**, add `GEMINI_API_KEY` with your key as the value.
-7. Deploy and note the service URL.
+6. **Instance type:** Free.
+7. Under **Environment**, add two variables:
+   - `GEMINI_API_KEY` — your Gemini key.
+   - `PYTHON_VERSION` — `3.11.9` (matches the version the project is pinned to).
+8. Deploy and note the service URL.
 
 Verify the backend is up by visiting `https://<your-service>.onrender.com/health`
 — it should return `{"status": "ok"}`.
@@ -125,6 +131,31 @@ to your frontend origin, e.g.:
 allow_origins=["https://classifyai.pages.dev"]
 ```
 Commit and redeploy the backend.
+
+### Troubleshooting the backend deploy
+
+**`ERROR: Could not open requirements file: ... 'requirements.txt'`**
+Render is running the build from the repository root instead of `backend/`.
+The `requirements.txt` file lives in `backend/`, so the service's **Root
+Directory** must be set to `backend`. Fix it in the service's **Settings →
+Root Directory**, set it to `backend`, then **Manual Deploy → Deploy latest
+commit**.
+
+**Wrong Python version (e.g. "Using Python version 3.14.x (default)")**
+The `PYTHON_VERSION` variable isn't being applied. On a **manually created**
+Web Service, `render.yaml` is ignored — the dashboard fields are authoritative.
+Add `PYTHON_VERSION` = `3.11.9` under **Environment** and redeploy.
+
+**Note:** `render.yaml` only takes effect through the **Blueprint** flow
+(**New → Blueprint**). A service created via **New → Web Service** does *not*
+read `render.yaml`; you must set Root Directory, environment variables, and the
+build/start commands manually (see Option B above). If you'd rather not manage
+those by hand, delete the manual service and recreate it as a Blueprint.
+
+**Render detects Poetry**
+This project uses `pip` with `requirements.txt`, not Poetry. Once **Root
+Directory** is `backend`, Render finds `requirements.txt` and uses pip. There is
+no `pyproject.toml`, so no Poetry configuration is needed.
 
 ## Operational notes
 
