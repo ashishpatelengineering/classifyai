@@ -1,6 +1,6 @@
 # ClassifyAI — AI-assisted CSV categorization
 
-ClassifyAI reads an entire CSV in a single pass, proposes categories that fit
+[ClassifyAI](https://classifyai.pages.dev/) reads an entire CSV in a single pass, proposes categories that fit
 the data, assigns every row a category with a confidence level and a short
 reason, and lets a reviewer correct anything before export. It is a split
 application: a React (Vite) frontend and a FastAPI backend.
