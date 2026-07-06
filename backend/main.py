@@ -76,13 +76,35 @@ def _call_gemini(client: genai.Client, contents: str) -> str:
     except HTTPException:
         raise
     except Exception as exc:
-        error_text = str(exc)
-        if "429" in error_text or "RESOURCE_EXHAUSTED" in error_text or "quota" in error_text.lower():
+        error_text = str(exc).lower()
+
+        # Rate limit / quota exhausted (429).
+        if "429" in error_text or "resource_exhausted" in error_text or "quota" in error_text:
             raise HTTPException(
                 status_code=503,
-                detail="ClassifyAI is temporarily at capacity. Please try again in a minute.",
+                detail="ClassifyAI has hit its usage limit for the moment. Please wait a minute and try again.",
             )
-        raise HTTPException(status_code=502, detail=f"Gemini request failed: {exc}")
+
+        # Model temporarily overloaded / unavailable (503).
+        if "503" in error_text or "unavailable" in error_text or "overloaded" in error_text or "high demand" in error_text:
+            raise HTTPException(
+                status_code=503,
+                detail="ClassifyAI is experiencing high demand right now. This usually lasts only a moment. Please try again shortly.",
+            )
+
+        # Request timed out.
+        if "timeout" in error_text or "timed out" in error_text or "deadline" in error_text:
+            raise HTTPException(
+                status_code=504,
+                detail="The request took too long to complete. Please try again, and consider a smaller file if it keeps happening.",
+            )
+
+        # Anything else: a clean, generic message. We never surface raw
+        # provider error text to end users.
+        raise HTTPException(
+            status_code=502,
+            detail="ClassifyAI couldn't complete this request. Please try again in a moment.",
+        )
 
 
 async def _read_csv(file: UploadFile) -> pd.DataFrame:
@@ -242,7 +264,7 @@ async def assign_categories(
     if incomplete:
         labels += ["Unknown"] * incomplete
         confidences += ["Low"] * incomplete
-        reasons += ["Needs a human eye — ClassifyAI wasn't sure on this one"] * incomplete
+        reasons += ["Needs a human eye. ClassifyAI was not sure on this one."] * incomplete
     elif len(labels) > row_count:
         labels = labels[:row_count]
         confidences = confidences[:row_count]
