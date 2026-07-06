@@ -19,8 +19,9 @@ frontend/   React (Vite) single-page app that calls the backend
 
 - The Gemini key is set once as an environment variable (`GEMINI_API_KEY`) on
   the backend. Visitors never see or enter a key.
-- The uploaded CSV is never written to the backend's disk. It is read into
-  memory, processed, and returned in the response. Nothing is persisted.
+- Your file is processed in memory and never saved. It is not retained after
+  your session ends. The uploaded CSV is read into memory, processed, and
+  returned in the response; it is never written to the backend's disk.
 
 ## API routes
 
