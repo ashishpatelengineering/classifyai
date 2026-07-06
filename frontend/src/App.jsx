@@ -153,7 +153,7 @@ export default function App() {
       </main>
 
       <footer className="footer">
-        <p>Your file is read in memory and never saved. When you close the tab, it's gone — nothing lingers on our servers.</p>
+        <p>Your file is processed in memory and never saved. It is not retained after your session ends.</p>
       </footer>
     </div>
   );
